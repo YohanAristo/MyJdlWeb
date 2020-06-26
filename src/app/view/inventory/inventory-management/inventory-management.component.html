@@ -1,0 +1,100 @@
+<main>
+    <div class="container-fluid">
+        <h1 class="mt-4">Inventory</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a routerLink="">Dashboard</a></li>
+            <li class="breadcrumb-item active">Inventory</li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-header">
+                <button mat-raised-button class="btn-create-member mr-3" (click)="onCreate()"  onclick="this.blur();">
+                    <i class="fas fa-plus fa-fw"></i> Inventory
+                </button>
+                <div class="line">
+                    <div class="line round1 pl-2 pt-2 pb-2 pr-2">
+                        <form [formGroup]="filterForm" (ngSubmit)="onFilter()">
+                            <mat-form-field class="pr-3" >
+                                <mat-label>Pilih Kategori</mat-label>
+                                <mat-select  formControlName="kategori"  id="kategori" name="kategori" >
+                                    <mat-option value="">--</mat-option>
+                                    <mat-option *ngFor="let categori of categories" [value]="categori">{{ categori }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field class="pr-3">
+                                <mat-label>Nama Barang</mat-label>
+                                <input matInput type="text" formControlName="barang" id="barang" name="barang">
+                            </mat-form-field>
+                            <mat-form-field class="pr-3">
+                                <mat-label>Stok less than </mat-label>
+                                <input matInput type="number" min="0" formControlName="stock" id="stock" name="stock">
+                            </mat-form-field>
+                            <button class="btn btn-primary mr-2" type="submit" [disabled]="!filterForm.valid">Cari</button>
+                            <button class="btn btn-danger mr-2" type="reset">Reset</button> 
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="float-right pb-3">
+                    <label>Cari :</label>
+                    <mat-form-field class="search-form-field" floatLabel="never">
+                        <input matInput [(ngModel)]="searchKey" placeholder="Nama Barang" autocomplete="off">
+                        <button mat-button matSuffix mat-icon-button arial-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <button mat-icon-button
+                            matTooltip="Cari Inventory"
+                            [matTooltipPosition]="positionOptions" onclick="this.blur();" (click)="applySearch()" [disabled]="searchKey==null || searchKey=='' "><mat-icon>search</mat-icon></button>
+                </div>
+                <div class="table-responsive example-container">
+                    <mat-divider></mat-divider>
+                    <mat-table [dataSource]="listData" #sort="matSort" (matSortChange)="sortData($event)" matSort>
+                        <ng-container matColumnDef="no_inventory">
+                            <mat-header-cell *matHeaderCellDef >No</mat-header-cell>
+                            <mat-cell *matCellDef="let element ; let i = index">{{ (i + 1) }}</mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="kode_inventory">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header="kode">Kode</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.kode }}</mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="nama_inventory">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header="nama">Nama</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.nama }}</mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="jumlah_inventory">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header="jumlah">Jumlah</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.jumlah }}</mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="harga_inventory">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header="harga">Harga</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.harga }}</mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                            <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+                            <mat-cell *matCellDef="let row ; let i = index">
+                                <button mat-icon-button (click)="onEdit(row)" onclick="this.blur();"><mat-icon matTooltip="Edit Inventory" [matTooltipPosition]="positionOptions">edit</mat-icon></button>
+                                <button mat-icon-button (click)="onDelete(row,i)" class="letter-sp"  onclick="this.blur();" ><mat-icon matTooltip="Hapus Inventory" [matTooltipPosition]="positionOptions" color="warn">delete</mat-icon></button>
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="noData">
+                            <mat-header-cell *matFooterCellDef colspan="5">
+                                Data Kosong...
+                            </mat-header-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="loading">
+                            <mat-header-cell *matFooterCellDef colspan="5">
+                                Loading data...
+                            </mat-header-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': listData!=null}" ></mat-footer-row>
+                        <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(listData!=null && listData.data.length==0)}" ></mat-footer-row>
+                    </mat-table>
+                </div>
+                <button class="btn btn-primary mt-3" *ngIf="loadMoreCheck" (click)="loadMore()">Load More</button>
+            </div>
+        </div>
+    </div>
+</main>

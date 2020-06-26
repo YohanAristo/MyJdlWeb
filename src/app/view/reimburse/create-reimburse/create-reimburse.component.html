@@ -1,0 +1,71 @@
+<div class="card shadow-lg border-0 rounded-lg m-0">
+    <div class="card-header">
+      <div class="float-right icon-close">
+        <mat-icon id="close-icon" (click)="onClose()">close</mat-icon>
+      </div>
+      <br>
+      <div class="text-center">
+        <span class="font-weight-medium h5">{{ title }}</span>
+      </div>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="form" >
+            <div class="form-group">
+                <mat-form-field class="form-date pr-4">
+                    <mat-label>Judul</mat-label>
+                    <input matInput formControlName="item" id="item" name="item" [readonly]="readonly">
+                    <mat-error *ngIf="f.item.errors?.required">Judul Harus Diisi</mat-error>
+                </mat-form-field>
+                <mat-form-field class="form-date">
+                    <mat-label>Nominal</mat-label>
+                    <input type="number" matInput formControlName="nominal" id="nominal" name="nominal" [readonly]="readonly">
+                    <mat-error *ngIf="f.nominal.errors?.required">Nominal Harus Diisi</mat-error>
+                </mat-form-field>  
+            </div>
+            <div class="form-group">
+                <mat-form-field class="form-date pr-4">
+                    <mat-label>Tanggal Kirim</mat-label>
+                    <input matInput [matDatepicker]="picker" formControlName="sentDate" id="sentDate" name="sentDate" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker [disabled]="readonly"></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="form-date">
+                    <mat-label>Tanggal Lunas</mat-label>
+                    <input matInput [matDatepicker]="picker1" formControlName="lunasDate" id="lunasDate" name="lunasDate" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1 [disabled]="readonly"></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form-group mb-1">
+                <mat-form-field class="form-create-member">
+                  <mat-label>Keterangan</mat-label>
+                  <textarea cdkTextareaAutosize cdkAutosizeMinRows="2"cdkAutosizeMaxRows="4" matInput formControlName="keterangan" id="keterangan" name="keterangan" [readonly]="readonly"></textarea>
+                </mat-form-field>
+              </div>
+            <div class="form-group">
+                <!-- <input type="file" multiple (change)="uploadFile($event)" formControlName="imgId" id="imgId" name="imgId" #file accept="image/*" (change)="preview(file.files)"> -->
+                <input type="file" multiple="true" (change)="uploadFile($event)" formControlName="imgId" id="imgId" name="imgId" #imgId accept="image/*" >
+            </div>
+            <div class="form-group scrollbar-form" style="width:auto;max-height:30vh;">
+                <div class="overflow-form">
+                    <div class="disp pr-1" *ngFor="let url of urls ; let i = index" [attr.data-index]="i">
+                        <img class="pb-2" [src]="url" style="width:auto;height:25vh;" id="myImg" (click)="openImage(url, i)">
+                        <span class="close-item pr-2" *ngIf="!readonly" (click)="removeImage(url, i)">&times;</span>
+                    </div>
+                </div>
+                <!-- <img [src]="imgUrl" style="width:auto;height:25vh;" *ngIf="imgUrl" (click)="openImage()" id="myImg"> -->
+            </div>
+            <div class="form-group mb-0">
+                <mat-checkbox color="primary" *ngIf="enable" [(ngModel)]="checked" (change)="onEditable()" [ngModelOptions]="{standalone: true}">edit data</mat-checkbox>
+            </div>
+            <div class="form-group mt-2 mb-0">
+                <button class="btn btn-primary btn-block" [disabled]="!form.valid || readonly" value="Submit" type="submit" (click)="onSubmit()">{{ buttonTxt }}</button>
+            </div>
+      </form>
+    </div>
+</div> 
+
+<div id="myModal" class="modal">
+    <span class="close" (click)="close()">&times;</span>
+    <img class="modal-content" [src]="imgUrl" style="width:auto;height:80vh;" alt="">
+</div>

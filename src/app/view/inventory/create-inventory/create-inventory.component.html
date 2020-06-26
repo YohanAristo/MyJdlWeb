@@ -1,0 +1,73 @@
+<div class="card shadow-lg border-0 rounded-lg m-0">
+    <div class="card-header">
+      <div class="float-right icon-close">
+        <mat-icon id="close-icon" (click)="onClose()">close</mat-icon>
+      </div>
+      <br>
+      <div class="text-center">
+        <span class="font-weight-medium h5">{{ title }}</span>
+      </div>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="form" >
+            <div class="form-group">
+                <mat-form-field class="form-date pr-4">
+                    <mat-label>Nama Barang</mat-label>
+                    <input matInput formControlName="nama_barang" id="nama_barang" name="nama_barang">
+                    <mat-error *ngIf="f.nama_barang.errors?.required">Nama Barang Harus Diisi</mat-error>
+                </mat-form-field>
+                <mat-form-field class="form-date">
+                    <mat-label>Pilih Kategori</mat-label>
+                    <mat-select  formControlName="kategori_barang"  id="kategori_barang" name="kategori_barang" >
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let categori of categories" [value]="categori">{{ categori }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="f.kategori_barang.errors?.required">Kategori Harus Dipilih</mat-error>
+                </mat-form-field>  
+            </div>
+            <div class="form-group">
+                <mat-form-field class="form-date pr-4">
+                    <mat-label>Jumlah Barang</mat-label>
+                    <input matInput type="number" min="0" formControlName="jumlah_barang" id="jumlah_barang" name="jumlah_barang">
+                    <mat-error *ngIf="f.jumlah_barang.errors?.required">Jumlah Barang Harus Diisi</mat-error>
+                </mat-form-field>
+                <mat-form-field class="form-date">
+                    <mat-label>Pilih Satuan</mat-label>
+                    <mat-select  formControlName="satuan" id="satuan" name="satuan" >
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let satuan of satuans" [value]="satuan">{{ satuan }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="f.satuan.errors?.required">Satuan Harus Dipilih</mat-error>
+                </mat-form-field>  
+            </div>
+            <div class="form-group row pl-2-5">
+                <mat-form-field class="form-date pr-4">
+                    <mat-label>Harga Barang</mat-label>
+                    <input matInput type="number" min="0" formControlName="harga_barang" id="harga_barang" name="harga_barang">
+                    <mat-error *ngIf="f.harga_barang.errors?.required">Harga Barang Harus Diisi</mat-error>
+                </mat-form-field>
+                <div class="form-date">
+                    <label class="fs-13">Barang Habis Pakai?</label>
+                    <br>
+                    <mat-radio-group  class="fs-13" formControlName="habis_pakai" id="habis_pakai" name="habis_pakai" >
+                        <mat-radio-button color="primary" class="mr-3" *ngFor="let habisPakai of habisPakais" [value]="habisPakai.state">{{ habisPakai.desc }}</mat-radio-button>
+                    </mat-radio-group>
+                </div>      
+            </div>
+            <div class="form-group mb-1">
+                <mat-form-field class="form-create-member">
+                  <mat-label>Keterangan</mat-label>
+                  <textarea cdkTextareaAutosize cdkAutosizeMinRows="2"cdkAutosizeMaxRows="4" matInput formControlName="keterangan" id="keterangan" name="keterangan"></textarea>
+                </mat-form-field>
+            </div>
+            <div class="form-group" *ngIf="displayQr">
+                <ngx-qrcode [elementType]="elementType" [value]="kodeBarang" id="qrCode"></ngx-qrcode>
+                <a [href]="href" (click)="downloadImage()" [download]="fileName">Download QR Code</a>
+            </div>
+
+            <div class="form-group mt-2 mb-0">
+                <button class="btn btn-primary btn-block" [disabled]="!form.valid" value="Submit" type="submit" (click)="onSubmit()">{{ buttonTxt }}</button>
+            </div>
+      </form>
+    </div>
+</div> 

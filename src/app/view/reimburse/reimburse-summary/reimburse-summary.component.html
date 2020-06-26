@@ -1,0 +1,127 @@
+<main>
+    <div class="container-fluid">
+        <h1 class="mt-4">Reimburse</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a routerLink="">Dashboard</a></li>
+            <li class="breadcrumb-item active">Reimburse-Summary</li>
+        </ol>
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-lg-2-5" (click)="onFilterAllReimburse()">
+                        <div class="card bg-primary text-white mb-2">
+                            <div class="card-body btn btn-primary pb-2 pt-2">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="h6-5 mb-0 font-weight-bold1 text-gray-800">Reimburse</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="h6-5 mb-0 font-weight-bold1 text-gray-800">{{ countReimburse }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2-5" (click)="onFilterBelumDikirim()">
+                        <div class="card bg-danger text-white mb-2">
+                            <div class="card-body btn btn-danger pb-2 pt-2">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="h6-5 mb-0 font-weight-bold1 text-gray-800">Belum Dikirim</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="h6-5 mb-0 font-weight-bold1 text-gray-800">{{ countBelumDikirim }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2-5" (click)="onFilterBelumLunas()">
+                        <div class="card bg-warning text-white mb-2">
+                            <div class="card-body btn btn-warning pb-2 pt-2">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="h6-5 mb-0 font-weight-bold1 text-gray-800">Belum Lunas</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="h6-5 mb-0 font-weight-bold1 text-gray-800">{{ countBelumLunas }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="float-right pl-6">
+                        <label>Cari :</label>
+                        <mat-form-field class="search-form-field" floatLabel="never">
+                            <input matInput [(ngModel)]="searchKey" placeholder="Cari" autocomplete="off" (keyup)="applyFilter()">
+                            <button mat-button matSuffix mat-icon-button arial-label="Clear" *ngIf="searchKey" (click)="onSearchClear()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive example-container">
+                    <mat-table [dataSource]="listData" #sort="matSort" (matSortChange)="sortData($event)" matSortActive="date" matSortDirection="asc" matSort>
+                        <ng-container matColumnDef="no_reimburse">
+                            <mat-header-cell *matHeaderCellDef >No</mat-header-cell>
+                            <mat-cell *matCellDef="let element ; let i = index">{{ (paginatorRef.pageIndex * paginatorRef.pageSize) + (i + 1) }}</mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="status_reimburse">
+                            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                <i class="fas fa-circle text-danger" *ngIf="(element.status=='BLMKIRIM')"></i>
+                                <i class="fas fa-circle text-warning" *ngIf="(element.status=='BLMLUNAS')"></i>
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="tanggal_reimburse">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header="date">Tanggal</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
+                                {{ element.created_date }}
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="pengirim_reimburse">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header="nama">Nama</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="item_reimburse">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header="item">Judul</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.item }}</mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="nominal_reimburse">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header="nominal">Nominal</mat-header-cell>
+                            <mat-cell *matCellDef="let element">{{ element.nominal }}</mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                            <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+                            <mat-cell *matCellDef="let row">
+                                <button mat-icon-button (click)="onDetail(row)" onclick="this.blur();"><mat-icon matTooltip="Detail Reimburse" [matTooltipPosition]="positionOptions">info</mat-icon></button>
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="noData">
+                            <mat-header-cell *matFooterCellDef colspan="5">
+                                Data Kosong...
+                            </mat-header-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="loading">
+                            <mat-header-cell *matFooterCellDef colspan="5">
+                                Loading data...
+                            </mat-header-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide': listData!=null}" ></mat-footer-row>
+                        <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide': !(listData!=null && listData.data.length==0)}" ></mat-footer-row>
+                    </mat-table>
+                    <mat-paginator #paging
+                        #paginatorRef 
+                        [pageSizeOptions]="pageSizeOptions" 
+                        [pageSize]="pageSize" 
+                        showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

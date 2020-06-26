@@ -1,0 +1,6 @@
+{
+    "api_reimburse" : "http://ireimburse-service.apps.pcf.dti.co.id",
+    "api_account" : "http://account-service.apps.pcf.dti.co.id",
+    "api_inventory" : "http://inventory-jdl-uat.apps.pcf.dti.co.id"
+}
+
